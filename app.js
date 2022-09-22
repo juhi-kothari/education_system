@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const apiRoutes = require('./routes/index');
 
-//const { body, validationResult } = require('express_validator');
-
 
 const app = express();
 const port = 9000;
