@@ -5,13 +5,15 @@ const courseController = {
     createCourse: async (req, res) => {
         try {
 
-            const { title, description, duration, price, discount } = req.body;
+            const { title, description, duration, price, discount,instructor,videos } = req.body;
             const course = new Course({
                 title,
                 description,
                 duration,
                 price,
-                discount
+                discount,
+                instructor,
+                videos
 
             });
 
@@ -32,18 +34,18 @@ const courseController = {
     updateCourse: async (req, res) => {
         try {
             const {title, description, duration, price, discount} = req.body;
-            const { courseId } = req.params;
+            const { courseId } = req.queryparams;
             const course = await Course.findById(courseId);
-            const  newCourse= {
-                title,
-                description,
-                duration,
-                price,
-                discount
+            
+               course.title = title,
+                course.description = description,
+                course.duration = duration,
+                course.price = price,
+                course.discount = discount
 
-            };
+            
 
-            await course.save(newCourse);
+            await course.save();
 
             res.status(200).send({
                 status: true,
@@ -56,7 +58,6 @@ const courseController = {
             });
         }
     },
-
     fetchAllCourses: async (req, res) => {
         try {
             const courses = await Course.find({}).select(['title', 'description', 'videos']);
@@ -75,8 +76,10 @@ const courseController = {
     },
     fetchCourseById: async (req, res) => {
         try {
-            const { courseId } = req.params;
-            const course = await Course.findById({courseId});
+            const { courseId } = req.query;
+            console.log(courseId);
+            const course = await Course.findById({ courseId } );
+            console.log(course);
 
             res.status(200).send({
                 status: true,
@@ -90,12 +93,11 @@ const courseController = {
             });
         }
     },
-
     deleteCourseById: async (req, res) => {
         try {
             const { courseId } = req.params;
             const course = await Course.findById({courseId});
-            await course.deleteOne();
+            await Course.deleteOne({id : courseId});
 
             res.status(200).send({
                 status: true,
@@ -110,7 +112,6 @@ const courseController = {
         }
     },
     
-
 
     addInstructor: async (req, res) => {
         try {
@@ -146,16 +147,18 @@ const courseController = {
         try {
             const { name, social, experience } = req.body;
             const { courseId, id } = req.params;
+            const course = await Course.findById(courseId);
+            course.instructor.forEach( instructor => {
+                if(instructor._id == id){
+                    {
+                      instructor.name = name,
+                       instructor.social = social,
+                       instructor.experience = experience
 
-            
-            if(){
-                const newInstructor = {
-                    name,
-                    social,
-                    experience
+                    }
+                    
                 }
-    
-                course.instructor.push(newInstructor);
+           })
                 await course.save();
     
     
@@ -163,10 +166,6 @@ const courseController = {
                     status: true,
                     message: "Instructor updated Successfully",
                 });
-
-            }
-
-           
 
         } catch (err) {
             res.status(400).send({
@@ -189,13 +188,13 @@ const courseController = {
                 description
             }
 
-            course.video.push(newVideo);
+            course.videos.push(newVideo);
             await course.save();
 
 
             res.status(200).send({
                 status: true,
-                message: "Instructor added Successfully",
+                message: "video added Successfully",
             });
 
         } catch (err) {
@@ -213,9 +212,9 @@ const courseController = {
             course.videos.forEach(video =>{
                 if(video._id == id){
                    {
-                       video.title =  title;
+                       video.title =  title,
                        video.url = url,
-                       video.decription= description;
+                       video.decription= description
                     }
 
                 }
@@ -237,7 +236,6 @@ const courseController = {
             });
         }
     },
-
 
 
 }
