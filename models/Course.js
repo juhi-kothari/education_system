@@ -19,6 +19,7 @@ const CourseSchema = new Schema({
   discount: {
     type: Number,
   },
+  
   instructor:[{
   
     name: {
@@ -41,7 +42,7 @@ const CourseSchema = new Schema({
     url: {
       type: String,
     },
-    decription: {
+    description: {
       type: String
     }
   }],
