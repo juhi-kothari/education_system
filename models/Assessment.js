@@ -20,7 +20,7 @@ const AssessmentSchema = new Schema({
   questions:[{
     question :{
         type : Schema.Types.ObjectId,
-        ref : 'question'
+        ref : 'Question'
     }
   
     
